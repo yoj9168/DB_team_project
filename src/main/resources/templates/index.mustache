@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<input type='checkbox'
+       name='search'
+       value='name'/> Name
+<input type='checkbox'
+       name='search'
+       value='ssn' /> Ssn
+<input type='checkbox'
+       name='search'
+       value='bdate' /> Bdate
+<input type='checkbox'
+       name='search'
+       value='address' /> Address
+<input type='checkbox'
+       name='search'
+       value='sex' /> Sex
+<input type='checkbox'
+       name='search'
+       value='salary' /> Salary
+<input type='checkbox'
+       name='search'
+       value='super_ssn' /> Supervisor
+<input type='checkbox'
+       name='search'
+       value='dno' /> Department
+
+<button onclick='getCheckboxValue()'>확인</button>
+
+<div id='result'></div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!--index.js 추가-->
+<script src="/js/app/index.js"></script>
+</body>
+</html>
+</body>
+</html>

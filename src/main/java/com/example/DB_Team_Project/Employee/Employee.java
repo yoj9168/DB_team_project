@@ -1,5 +1,7 @@
 package com.example.DB_Team_Project.Employee;
 
+import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,9 +9,7 @@ import lombok.Setter;
 @Setter
 public class Employee {
     private String ssn;
-    private String fname;
-    private String lname;
-    private String Minit;
+    private String name;
     private String date;
     private String address;
     private String sex;
@@ -17,5 +17,19 @@ public class Employee {
     private String super_ssn;
     private int dno;
 
+    @Builder
+    public Employee(String ssn, String name, String date, String address, String sex, Double salary, String super_ssn, int dno){
+        this.ssn = ssn;
+        this.name = name;
+        this.date = date;
+        this.address = address;
+        this.sex = sex;
+        this.salary = salary;
+        this.super_ssn = super_ssn;
+        this.dno = dno;
+    }
 
+    public Employee() {
+
+    }
 }
