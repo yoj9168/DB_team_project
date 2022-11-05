@@ -27,18 +27,6 @@ function getCheckboxValue()  {
     }).done(function(rs) {
         alert('POST 성공');
         console.log(JSON.stringify(rs));
-        $.each(rs, function(index, item) { // 데이터 =item
-            $("#table").append(index + " "); // index가 끝날때까지
-            $("#table").append(item.ssn + " ");
-            $("#table").append(item.name + " ");
-            $("#table").append(item.date + " ");
-            $("#table").append(item.address + " ");
-            $("#table").append(item.sex + " ");
-            $("#table").append(item.salary + " ");
-            $("#table").append(item.super_ssn + " ");
-            $("#table").append(item.dno + "<br>");
-        });
-        $('#table').text(JSON.stringify(rs));
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });

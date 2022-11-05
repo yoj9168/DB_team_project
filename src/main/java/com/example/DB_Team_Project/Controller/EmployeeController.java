@@ -16,10 +16,6 @@ import java.util.List;
 public class EmployeeController {
     private final SelectService selectService;
 
-    @GetMapping("/employee")
-    public List<Employee> selectAll(){
-       return selectService.selectAll();
-    }
     @PostMapping("/employee")
     public List<Employee> select(@RequestBody List<String> attribute){
         return selectService.select(attribute);

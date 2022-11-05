@@ -6,6 +6,5 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface EmployeeRepository {
-    List<Employee> findAll();
     List<Employee> find(List<String> attribute);
 }

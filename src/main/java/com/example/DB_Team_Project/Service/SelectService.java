@@ -16,10 +16,6 @@ public class SelectService {
     @Autowired
     private final JdbcTemplateEmployeeRepository repository;
     @Transactional
-    public List<Employee> selectAll() {
-        return repository.findAll();
-    }
-    @Transactional
     public List<Employee> select(List<String> attribute) {
         return repository.find(attribute);
     }

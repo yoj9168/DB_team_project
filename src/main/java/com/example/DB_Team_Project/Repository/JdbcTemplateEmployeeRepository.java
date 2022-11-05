@@ -22,15 +22,10 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
     }
 
     @Override
-    public List<Employee> findAll() {
-        return jdbcTemplate.query("select * from employee", employeeRowMapper());
-    }
-
-    @Override
     public List<Employee> find(List<String> attribute) {
         check = new boolean[]{false,false,false,false,false,false,false,false,false,false};
         attributes= new String[]{"ssn", "fname", "lname","minit","bdate", "address", "sex", "salary", "super_ssn", "dno"};
-        String select = "";
+        String select = "a.ssn, a.fname, a.lname, a.minit, a.bdate, a.address, a.sex, a.salary, c.fname, c.lname, c.minit, b.dname";
 
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < attribute.size(); j++){
@@ -38,58 +33,49 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
                     check[i] = true;
             }
         }
-        for(int i = 0; i < 8; i++){
-            System.out.println("bool " + check[i]);
-            System.out.println("check1 "+attributes[i]);
-        }
-        for(String i: attribute){
-            System.out.println("check2 "+i);
-        }
-        for(String i : attribute){
-            select += i;
-            if(i != attribute.get(attribute.size()-1))
-                select+=", ";
-        }
-
-        return jdbcTemplate.query("select " + select + " from employee",employeeRowMapper());
+        System.out.println("select "+select+" from (employee as a join department as b on dnumber = dno) join employee as c on a.super_ssn=c.ssn");
+        return jdbcTemplate.query("select "+select+" from (employee as a join department as b on dnumber = dno) join employee as c on a.super_ssn=c.ssn",employeeRowMapper());
     }
 
     private RowMapper<Employee> employeeRowMapper() {
         return (rs, rowNum) -> {
-            Employee employee = new Employee();
-
+            Employee employee;
+            String ssn = null, name = null, bdate = null, address = null, sex = null, super_ssn = null, dname = null;
+            double salary = 0;
             if(check[0]){
-                //employee = Employee.builder().ssn(rs.getString("Ssn")).build();
-                employee.setSsn(rs.getString("Ssn"));
+                ssn = rs.getString("Ssn");
             }
             if(check[1] && check[2] && check[3]){
-                //employee = Employee.builder().name(rs.getString(rs.getString("Fname")+rs.getString("Minit")+rs.getString("Lname"))).build();
-                employee.setName(rs.getString("Fname")+rs.getString("Minit")+rs.getString("Lname"));
+                name = rs.getString("Fname")+rs.getString("Minit")+rs.getString("Lname");
             }
             if(check[4]){
-                //employee = Employee.builder().date(rs.getString("Bdate")).build();
-                employee.setDate(rs.getString("Bdate"));
+                bdate = rs.getString("Bdate");
             }
             if(check[5]){
-                //employee = Employee.builder().address(rs.getString("Address")).build();
-                employee.setAddress(rs.getString("Address"));
+                address = rs.getString("Address");
             }
             if(check[6]){
-                //employee = Employee.builder().sex(rs.getString("Sex")).build();
-                employee.setSex(rs.getString("Sex"));
+                sex = rs.getString("Sex");
             }
             if(check[7]){
-                //employee = Employee.builder().salary(Double.valueOf(rs.getString("Salary"))).build();
-                employee.setSalary(Double.parseDouble(rs.getString("Salary")));
+                salary = rs.getDouble("Salary");
             }
             if(check[8]){
-                //employee = Employee.builder().super_ssn(rs.getString("Super_ssn")).build();
-                employee.setSuper_ssn(rs.getString("Super_ssn"));
+                super_ssn = rs.getString("c.Fname")+rs.getString("c.Minit")+rs.getString("c.Lname");
             }
             if(check[9]){
-                employee.setDno(Integer.parseInt(rs.getString("Dno")));
-                //employee = Employee.builder().dno(Integer.parseInt(rs.getString("Dno"))).build();
+                dname = rs.getString("Dname");
             }
+            employee = Employee.builder()
+                    .ssn(ssn)
+                    .name(name)
+                    .date(bdate)
+                    .address(address)
+                    .sex(sex)
+                    .salary(salary)
+                    .super_ssn(super_ssn)
+                    .dno(dname)
+                    .build();
             return employee;
         };
     }
