@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Index</title>
 </head>
 <body>
@@ -29,7 +28,14 @@
 <input type='checkbox'
        name='search'
        value='dno' /> Department
-
+<select id="searchRange">
+    <option value="default">전체</option>
+    <option value="department">부서</option>
+    <option value="sex">성별</option>
+    <option value="salary">연봉</option>
+    <option value="bdate">생일</option>
+    <option value="ssn">부하직원</option>
+</select>
 <button onclick='getCheckboxValue()'>확인</button>
 
 <div id='result'>

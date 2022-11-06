@@ -1,6 +1,7 @@
 package com.example.DB_Team_Project.Controller;
 
 import com.example.DB_Team_Project.Employee.Employee;
+import com.example.DB_Team_Project.Employee.EmployeeDto;
 import com.example.DB_Team_Project.Service.SelectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +18,8 @@ public class EmployeeController {
     private final SelectService selectService;
 
     @PostMapping("/employee")
-    public List<Employee> select(@RequestBody List<String> attribute){
-        return selectService.select(attribute);
+    public List<Employee> select(@RequestBody EmployeeDto dto){
+        return selectService.select(dto);
     }
-
 
 }

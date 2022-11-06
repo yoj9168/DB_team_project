@@ -1,6 +1,7 @@
 package com.example.DB_Team_Project.Service;
 
 import com.example.DB_Team_Project.Employee.Employee;
+import com.example.DB_Team_Project.Employee.EmployeeDto;
 import com.example.DB_Team_Project.Repository.JdbcTemplateEmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class SelectService {
     @Autowired
     private final JdbcTemplateEmployeeRepository repository;
     @Transactional
-    public List<Employee> select(List<String> attribute) {
-        return repository.find(attribute);
+    public List<Employee> select(EmployeeDto dto) {
+        return repository.find(dto);
     }
 
 }

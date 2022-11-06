@@ -1,4 +1,6 @@
 function getCheckboxValue()  {
+    var value_str = document.getElementById('searchRange');
+    console.log(value_str.options[value_str.selectedIndex].value);
     // 선택된 목록 가져오기
     const query = 'input[name="search"]:checked';
     const selectedEls =
