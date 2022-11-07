@@ -50,6 +50,7 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
 
     @Override
     public int selectCount(EmployeeDto dto) {
+        selectRange = dto.getSelectRange();
         String where = checkCommand(selectRange, dto);
         System.out.println("select count(*) "+ from +where);
         int rowCount = jdbcTemplate.queryForObject("select count(*) "+ from +where,Integer.class);
