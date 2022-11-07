@@ -38,7 +38,7 @@ function postAjax(_attribuite, _selectRange, _search)
         contentType:'application/json; charset=utf-8'
     }).done(function(rs) {
         alert('POST 성공');
-        console.log(replaceNullorZero(rs));
+        tuplesToCSV(replaceNullorZero(rs));
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
@@ -57,4 +57,63 @@ function replaceNullorZero(_objs)
     })
 
     return _objs;
+}
+
+function tuplesToCSV(_objs)
+{
+    const keys = Object.keys(_objs[0]);
+    let CSVString = "\uFEFF"; //BOM
+    
+	for(let i = 0; i < keys.length ; i++)
+	{
+		CSVString += keys[i] + ",";
+	}
+	CSVString += "\r\n"
+    
+	_objs.forEach((v) => {
+		for(let i = 0; i < keys.length ; i++)
+		{
+			let value = v[keys[i]];
+			if(value.toString().includes(","))
+				CSVString += "\"" + value + "\"" + ",";
+			else
+				CSVString += value + ",";
+		}
+		CSVString += "\r\n"
+	})
+	
+	filename = 'View.csv'
+    if (window.navigator && window.navigator.msSaveOrOpenBlob)
+    {
+	    var blob = new Blob([decodeURIComponent(CSVString)], {
+	        type: 'text/csv;charset=utf8'
+	    });
+	    window.navigator.msSaveOrOpenBlob(blob, filename);
+    } else if (window.Blob && window.URL) {
+        // HTML5 Blob
+        var blob = new Blob([CSVString], { type: 'text/csv;charset=utf8' });
+        var csvUrl = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.setAttribute('style', 'display:none');
+        a.setAttribute('href', csvUrl);
+        a.setAttribute('download', filename);
+        document.body.appendChild(a);
+
+        a.click()
+        a.remove();
+    } else {
+        // Data URI
+        var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvString);
+        var blob = new Blob([CSVString], { type: 'text/csv;charset=utf8' });
+        var csvUrl = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.setAttribute('style', 'display:none');
+        a.setAttribute('target', '_blank');
+        a.setAttribute('href', csvData);
+        a.setAttribute('download', filename);
+        document.body.appendChild(a);
+        
+        a.click()
+        a.remove();
+    }
 }
