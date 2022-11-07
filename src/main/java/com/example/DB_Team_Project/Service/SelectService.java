@@ -21,4 +21,7 @@ public class SelectService {
         return repository.find(dto);
     }
 
+    public int selectCount(EmployeeDto dto) {
+        return repository.selectCount(dto);
+    }
 }

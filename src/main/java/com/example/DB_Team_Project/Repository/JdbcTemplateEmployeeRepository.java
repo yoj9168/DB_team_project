@@ -17,6 +17,9 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
     private String selectRange;
     private String search;
     private String where;
+    private String from = " from (employee as a join department as b on dnumber = dno) join employee as c on a.super_ssn=c.ssn ";
+    private String select = "a.ssn, a.fname, a.lname, a.minit, a.bdate, a.address, a.sex, a.salary, c.fname, c.lname, c.minit, b.dname";
+
 
     @Autowired
     public JdbcTemplateEmployeeRepository(JdbcTemplate jdbcTemplate) {
@@ -34,7 +37,6 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
 
         check = new boolean[]{false,false,false,false,false,false,false,false,false,false};
         attributes= new String[]{"ssn", "fname", "lname","minit","bdate", "address", "sex", "salary", "super_ssn", "dno"};
-        String select = "a.ssn, a.fname, a.lname, a.minit, a.bdate, a.address, a.sex, a.salary, c.fname, c.lname, c.minit, b.dname";
 
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < dto.getAttribute().size(); j++){
@@ -42,18 +44,22 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
                     check[i] = true;
             }
         }
-        System.out.println("select "+select+" from (employee as a join department as b on dnumber = dno) join employee as c on a.super_ssn=c.ssn " +
-                where);
-        return jdbcTemplate.query("select "+select+" from (employee as a join department as b on dnumber = dno) join employee as c on a.super_ssn=c.ssn " +
-                where,employeeRowMapper());
+        System.out.println("select "+select+from+where);
+        return jdbcTemplate.query("select " + select + from + where,employeeRowMapper());
+    }
+
+    @Override
+    public int selectCount(EmployeeDto dto) {
+        String where = checkCommand(selectRange, dto);
+        System.out.println("select count(*) "+ from +where);
+        int rowCount = jdbcTemplate.queryForObject("select count(*) "+ from +where,Integer.class);
+        return rowCount;
     }
 
     private String checkCommand(String selectRange, EmployeeDto dto) {
         String where="where ";
         if(selectRange.equals("dname")){
             selectRange = "b.dname";
-//            selectRange = "";
-//            selectRange+="b."+ dto.getSelectRange();
             search = "\""+dto.getSearch()+"\"";
             where+=selectRange+"="+search;
             return where;
@@ -64,23 +70,17 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
         }
         else if(selectRange.equals("sex")){
             selectRange="a.sex";
-//            selectRange="";
-//            selectRange+="a."+dto.getSelectRange();
             search = "\""+dto.getSearch()+"\"";
             where+=selectRange+"="+search;
             return where;
         }
         else if(selectRange.equals("salary")){
             selectRange="a.salary";
-//            selectRange="";
-//            selectRange+="a."+dto.getSelectRange();
             search = dto.getSearch();
             where+=selectRange+">"+search;
             return where;
         }
         else if(selectRange.equals("bdate")){
-//            selectRange="";
-//            selectRange+="a."+dto.getSelectRange();
             selectRange="a.bdate";
             search=dto.getSearch();
             where+=selectRange+" LIKE " + "\""+"_____"+search+"___"+"\"";

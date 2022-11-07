@@ -22,4 +22,8 @@ public class EmployeeController {
         return selectService.select(dto);
     }
 
+    @PostMapping("employee/count")
+    public int selectCount(@RequestBody EmployeeDto dto){
+        return selectService.selectCount(dto);
+    }
 }

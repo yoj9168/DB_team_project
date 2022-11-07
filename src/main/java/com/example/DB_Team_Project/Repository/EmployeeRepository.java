@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface EmployeeRepository {
     List<Employee> find(EmployeeDto dto);
+    int selectCount(EmployeeDto dto);
 }
