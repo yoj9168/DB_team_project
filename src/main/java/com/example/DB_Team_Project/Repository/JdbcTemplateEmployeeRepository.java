@@ -17,7 +17,7 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
     private String selectRange;
     private String search;
     private String where;
-    private String from = " from (employee as a join department as b on dnumber = dno) join employee as c on a.super_ssn=c.ssn ";
+    private String from = " from (employee as a left outer join department as b on dnumber = dno) left outer join employee as c on a.super_ssn=c.ssn ";
     private String select = "a.ssn, a.fname, a.lname, a.minit, a.bdate, a.address, a.sex, a.salary, c.fname, c.lname, c.minit, b.dname";
 
 

@@ -1,3 +1,122 @@
+function Dataframe(_tuples) {
+    this.tuples = _tuples;
+    this.csvData = Dataframe.prototype.tuplesToCSV(_tuples);
+}
+
+Dataframe.prototype.saveCSV = function (_filename) {
+    let filename = _filename
+    if (window.navigator && window.navigator.msSaveOrOpenBlob)
+    {
+        let blob = new Blob([decodeURIComponent(this.stringData)], {
+            type: 'text/csv;charset=utf8'
+        });
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+    } else if (window.Blob && window.URL) {
+        // HTML5 Blob
+        let blob = new Blob([this.stringData], { type: 'text/csv;charset=utf8' });
+        let csvUrl = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.setAttribute('style', 'display:none');
+        a.setAttribute('href', csvUrl);
+        a.setAttribute('download', filename);
+        document.body.appendChild(a);
+
+        a.click()
+        a.remove();
+    } else {
+        // Data URI
+        let csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(this.stringData);
+        let blob = new Blob([this.stringData], { type: 'text/csv;charset=utf8' });
+        let csvUrl = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.setAttribute('style', 'display:none');
+        a.setAttribute('target', '_blank');
+        a.setAttribute('href', csvData);
+        a.setAttribute('download', filename);
+        document.body.appendChild(a);
+
+        a.click()
+        a.remove();
+    }
+}
+
+Dataframe.prototype.tuplesToCSV = function(_tuples)
+{
+    const keys = Object.keys(_tuples[0]);
+    let CSVString = "\uFEFF"; //BOM
+
+    for(let i = 0; i < keys.length ; i++)
+    {
+        CSVString += keys[i] + ",";
+    }
+    CSVString += "\r\n"
+
+    _tuples.forEach((v) => {
+        for(let i = 0; i < keys.length ; i++)
+        {
+            let value = v[keys[i]];
+            if(value.toString().includes(","))
+                CSVString += "\"" + value + "\"" + ",";
+            else
+                CSVString += value + ",";
+        }
+        CSVString += "\r\n"
+    })
+
+    return CSVString;
+}
+
+Dataframe.prototype.showTable = function()
+{
+    this.removeTable();
+    let tbparent = document.getElementById('result');
+    let allRows = this.tuples;
+    let table = '<table id = "resultTable">';
+    for (let singleRow = 0; singleRow < allRows.length; singleRow++) {
+        if (singleRow === 0) {
+            table += '<thead>';
+            table += '<tr>';
+        } else {
+            table += '<tr>';
+        }
+
+        let row = allRows[singleRow];
+        let rowKeys = Object.keys(allRows[singleRow]);
+        for(let i = 0; i < rowKeys.length; i++){
+            if(singleRow === 0){
+                table += '<th>';
+                table += rowKeys[i];
+                table += '</th>';
+            } else {
+                table += '<td>';
+                table += row[rowKeys[i]];
+                table += '</td>';
+            }
+        }
+        if (singleRow === 0) {
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody>';
+        } else {
+            table += '</tr>';
+        }
+    }
+    table += '</tbody>';
+    table += '</table>';
+
+    tbparent.insertAdjacentHTML("afterbegin", table);
+}
+
+Dataframe.prototype.removeTable = function()
+{
+    let tbparent = document.getElementById('result');
+    let tb = document.getElementById('resultTable');
+    if(tb != null)
+        tbparent.removeChild(tb);
+}
+
+var dataframe;
+
 function getCheckboxValue()  {
     var value_str = document.getElementById('searchRange');
     console.log(value_str.options[value_str.selectedIndex].value);
@@ -38,7 +157,9 @@ function postAjax(_attribuite, _selectRange, _search)
         contentType:'application/json; charset=utf-8'
     }).done(function(rs) {
         alert('POST 성공');
-        console.log(replaceNullorZero(rs));
+        console.log(rs);
+        dataframe = new Dataframe((replaceNullorZero(rs)));
+        dataframe.showTable();
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });

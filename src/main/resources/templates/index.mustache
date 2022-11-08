@@ -2,6 +2,32 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Index</title>
+
+    <style>
+        table
+        {
+            margin: 0 auto;
+            text-align: center;
+            border-collapse: collapse;
+            border: 1px solid #d4d4d4;
+            height: 500px;
+        }
+
+        tr:nth-child(even)
+        {
+            background: #d4d4d4;
+        }
+
+        th, td
+        {
+            padding: 10px 30px;
+        }
+
+        th
+        {
+            border-bottom: 1px solid #d4d4d4;
+        }
+    </style>
 </head>
 <body>
 <input type='checkbox'
@@ -41,17 +67,17 @@
           name = 'customInputField' />
 <button onclick='getCheckboxValue()'>확인</button>
 
-<div id='result'>
-    <p id = "table"></p>
-</div>
+</br>
+</br>
+</br>
 
+<div id='result'>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <!--index.js 추가-->
 <script src="/js/app/index.js"></script>
-</body>
-</html>
 </body>
 </html>
