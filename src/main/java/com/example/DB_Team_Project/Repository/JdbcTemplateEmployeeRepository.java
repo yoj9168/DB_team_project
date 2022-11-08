@@ -1,19 +1,22 @@
 package com.example.DB_Team_Project.Repository;
 
 import com.example.DB_Team_Project.Employee.Employee;
-import com.example.DB_Team_Project.Employee.EmployeeDto;
+import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
+import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
 import java.util.List;
 @Repository
 public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
 
     private final JdbcTemplate jdbcTemplate;
     private boolean check[];
-    private String[] attributes;
+    private String[] attributes= new String[]{"ssn", "fname", "lname","minit","bdate", "address", "sex", "salary", "super_ssn", "dno"};
+    ;
     private String selectRange;
     private String search;
     private String where;
@@ -27,7 +30,7 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
     }
 
     @Override
-    public List<Employee> find(EmployeeDto dto) {
+    public List<Employee> find(EmployeeSelectDto dto) {
         selectRange = dto.getSelectRange();
         where = checkCommand(selectRange, dto);
 
@@ -36,7 +39,6 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
 
 
         check = new boolean[]{false,false,false,false,false,false,false,false,false,false};
-        attributes= new String[]{"ssn", "fname", "lname","minit","bdate", "address", "sex", "salary", "super_ssn", "dno"};
 
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < dto.getAttribute().size(); j++){
@@ -49,7 +51,7 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
     }
 
     @Override
-    public int selectCount(EmployeeDto dto) {
+    public int selectCount(EmployeeSelectDto dto) {
         selectRange = dto.getSelectRange();
         String where = checkCommand(selectRange, dto);
         System.out.println("select count(*) "+ from +where);
@@ -57,11 +59,20 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
         return rowCount;
     }
 
-    private String checkCommand(String selectRange, EmployeeDto dto) {
+    @Override
+    public int delete(EmployeeDeleteDto dto) {
+        String where = "";
+
+        String sql = "delete employee where "+where;
+        return jdbcTemplate.update(sql);
+    }
+
+    private String checkCommand(String selectRange, EmployeeSelectDto dto) {
         String where="where ";
         if(selectRange.equals("dname")){
             selectRange = "b.dname";
-            search = "\""+dto.getSearch()+"\"";
+            search=dto.getSearch();
+            search = "\""+search+"\"";
             where+=selectRange+"="+search;
             return where;
         }
@@ -140,4 +151,26 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
         };
     }
 
+    public List<String> getDepartment() {
+        return jdbcTemplate.query("select distinct dname from employee, department where dno=dnumber", (ResultSet rs, int rowNum)->{
+            String string = "";
+            string+=rs.getString("Dname");
+            return string;
+        });
+    }
+
+    public List<String> getSex() {
+        return jdbcTemplate.query("select distinct sex from employee", (ResultSet rs, int rowNum)->{
+            String string = "";
+            string+=rs.getString("sex");
+            return string;
+        });
+    }
+    public List<String> getName(){
+        return jdbcTemplate.query("select distinct fname from employee", (ResultSet rs, int rowNum)->{
+            String string = "";
+            string+=rs.getString("fname");
+            return string;
+        });
+    }
 }

@@ -1,15 +1,10 @@
 package com.example.DB_Team_Project.Employee;
 
-import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 @Getter
-@Setter
-public class Employee {
+public class EmployeeDeleteDto {
     private String ssn;
     private String name;
     private String date;
@@ -20,7 +15,7 @@ public class Employee {
     private String dno;
 
     @Builder
-    public Employee(String ssn, String name, String date, String address, String sex, Double salary, String super_ssn, String dno){
+    public EmployeeDeleteDto(String ssn, String name, String date, String address, String sex, Double salary, String super_ssn, String dno){
         this.ssn = ssn;
         this.name = name;
         this.date = date;
@@ -30,4 +25,5 @@ public class Employee {
         this.super_ssn = super_ssn;
         this.dno = dno;
     }
+
 }
