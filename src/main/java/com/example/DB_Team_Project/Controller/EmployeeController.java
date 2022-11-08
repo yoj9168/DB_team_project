@@ -3,6 +3,7 @@ package com.example.DB_Team_Project.Controller;
 import com.example.DB_Team_Project.Employee.Employee;
 import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
 import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
+import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
 import com.example.DB_Team_Project.Service.SelectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,10 @@ public class EmployeeController {
     @PostMapping("/employee/delete")
     public int delete(@RequestBody EmployeeDeleteDto dto){
         return selectService.delete(dto);
+    }
 
+    @PostMapping("/employee/update")
+    public int update(@RequestBody EmployeeUpdateDto dto){
+        return selectService.update(dto);
     }
 }

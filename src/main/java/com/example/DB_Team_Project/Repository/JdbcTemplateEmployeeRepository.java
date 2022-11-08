@@ -3,6 +3,7 @@ package com.example.DB_Team_Project.Repository;
 import com.example.DB_Team_Project.Employee.Employee;
 import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
 import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
+import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,14 +58,6 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
         System.out.println("select count(*) "+ from +where);
         int rowCount = jdbcTemplate.queryForObject("select count(*) "+ from +where,Integer.class);
         return rowCount;
-    }
-
-    @Override
-    public int delete(EmployeeDeleteDto dto) {
-        String where = "";
-
-        String sql = "delete employee where "+where;
-        return jdbcTemplate.update(sql);
     }
 
     private String checkCommand(String selectRange, EmployeeSelectDto dto) {

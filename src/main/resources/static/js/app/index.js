@@ -244,6 +244,7 @@ function replaceNullorZero(_objs)
 function rowClickEventListner(event, index)
 {
 	elemRow = document.getElementById('tuple'+index);
+    console.log(document.getElementById('tuple'+index));
 	if(selectedRows[index] = !selectedRows[index])
 		elemRow.style.cssText = 'background-color: #d4f4d4';
 	else
