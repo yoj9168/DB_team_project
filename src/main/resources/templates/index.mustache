@@ -2,27 +2,27 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Index</title>
-    
-	<style>
-	table
-	{
-	    margin: 0 auto;
-	    text-align: center;
-	    border-collapse: collapse;
-	    border: 1px solid #d4d4d4;
-	    height: 500px; 
-	}
-	          
-	th, td
-	{
-	    padding: 10px 30px;
-	}
-	          
-	th 
-	{
-	    border-bottom: 1px solid #d4d4d4;
-	}
-	</style>
+
+    <style>
+        table
+        {
+            margin: 0 auto;
+            text-align: center;
+            border-collapse: collapse;
+            border: 1px solid #d4d4d4;
+            height: 500px;
+        }
+
+        th, td
+        {
+            padding: 10px 30px;
+        }
+
+        th
+        {
+            border-bottom: 1px solid #d4d4d4;
+        }
+    </style>
 </head>
 <body>
 <input type='checkbox'
@@ -50,7 +50,7 @@
        name='search'
        value='dno' /> Department
 </br>
-<select id="searchRange">
+<select id="searchRange" onchange = "makeDropdownFromMetadata(this.value)">
     <option value="default">전체</option>
     <option value="dname">부서</option>
     <option value="sex">성별</option>
@@ -58,8 +58,8 @@
     <option value="bdate">생일</option>
     <option value="ssn">부하직원</option>
 </select>
-<input	type = 'text'
-          name = 'customInputField' />
+<span id = 'customInputField'>
+</span>
 <button onclick='getCheckboxValue()'>확인</button>
 
 </br>
@@ -71,6 +71,7 @@
 
 </br>
 </br>
+<p>선택된 튜플의 개수 : <span class="countTuple">0</span></p>
 <button onclick='postSelectedRows()'>선택 완료</button>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

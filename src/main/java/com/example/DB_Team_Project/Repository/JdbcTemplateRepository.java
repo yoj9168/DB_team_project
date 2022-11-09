@@ -1,6 +1,8 @@
 package com.example.DB_Team_Project.Repository;
 
+import com.example.DB_Team_Project.Employee.Employee;
 import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
+import com.example.DB_Team_Project.Employee.EmployeeInsertDto;
 import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,5 +48,11 @@ public class JdbcTemplateRepository implements OperationRepository {
         sql+=setCondition+"="+setValue+" where "+whereCondition + " = "+whereValue;
         return jdbcTemplate.update(sql);
 
+    }
+
+    @Override
+    public int insert(EmployeeInsertDto dto) {
+        System.out.println("insert into employee value "+dto.toString());
+        return jdbcTemplate.update("insert into employee value "+dto);
     }
 }

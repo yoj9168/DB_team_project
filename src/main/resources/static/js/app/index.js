@@ -3,11 +3,11 @@ $(document).ready(function (){
         type: 'POST',
         url:'/employee/department',
         dataType:'json',
-        contentType:'application/json; charset=utf-8'
+        contentType:'application/json; charset=utf-8',
+        async : false
     }).done(function(rs) {
-        rs.forEach(element => {
-            console.log(element)
-        })
+        metadata["department"] = rs
+        console.log(metadata);
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
@@ -15,11 +15,10 @@ $(document).ready(function (){
         type: 'POST',
         url:'/employee/sex',
         dataType:'json',
-        contentType:'application/json; charset=utf-8'
+        contentType:'application/json; charset=utf-8',
+        async : false
     }).done(function(rs) {
-        rs.forEach(element => {
-            console.log(element)
-        })
+        metadata["sex"] = rs
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
@@ -27,11 +26,10 @@ $(document).ready(function (){
         type: 'POST',
         url:'/employee/name',
         dataType:'json',
-        contentType:'application/json; charset=utf-8'
+        contentType:'application/json; charset=utf-8',
+        async : false
     }).done(function(rs) {
-        rs.forEach(element => {
-            console.log(element)
-        })
+        metadata["name"] = rs
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
@@ -43,13 +41,13 @@ function Dataframe(_tuples) {
 }
 
 Dataframe.prototype.saveCSV = function (_filename) {
-	let filename = _filename
+    let filename = _filename
     if (window.navigator && window.navigator.msSaveOrOpenBlob)
     {
-	    let blob = new Blob([decodeURIComponent(this.stringData)], {
-	        type: 'text/csv;charset=utf8'
-	    });
-	    window.navigator.msSaveOrOpenBlob(blob, filename);
+        let blob = new Blob([decodeURIComponent(this.stringData)], {
+            type: 'text/csv;charset=utf8'
+        });
+        window.navigator.msSaveOrOpenBlob(blob, filename);
     } else if (window.Blob && window.URL) {
         // HTML5 Blob
         let blob = new Blob([this.stringData], { type: 'text/csv;charset=utf8' });
@@ -73,7 +71,7 @@ Dataframe.prototype.saveCSV = function (_filename) {
         a.setAttribute('href', csvData);
         a.setAttribute('download', filename);
         document.body.appendChild(a);
-        
+
         a.click()
         a.remove();
     }
@@ -81,39 +79,39 @@ Dataframe.prototype.saveCSV = function (_filename) {
 
 Dataframe.prototype.tuplesToCSV = function(_tuples)
 {
-	if(_tuples.length === 0) return;
-	
+    if(_tuples.length === 0) return;
+
     const keys = Object.keys(_tuples[0]);
     let CSVString = "\uFEFF"; //BOM
-    
-	for(let i = 0; i < keys.length ; i++)
-	{
-		CSVString += keys[i] + ",";
-	}
-	CSVString += "\r\n"
-    
-	_tuples.forEach((v) => {
-		for(let i = 0; i < keys.length ; i++)
-		{
-			let value = v[keys[i]];
-			if(value.toString().includes(","))
-				CSVString += "\"" + value + "\"" + ",";
-			else
-				CSVString += value + ",";
-		}
-		CSVString += "\r\n"
-	})
+
+    for(let i = 0; i < keys.length ; i++)
+    {
+        CSVString += keys[i] + ",";
+    }
+    CSVString += "\r\n"
+
+    _tuples.forEach((v) => {
+        for(let i = 0; i < keys.length ; i++)
+        {
+            let value = v[keys[i]];
+            if(value.toString().includes(","))
+                CSVString += "\"" + value + "\"" + ",";
+            else
+                CSVString += value + ",";
+        }
+        CSVString += "\r\n"
+    })
 
     return CSVString;
 }
 
 Dataframe.prototype.showTable = function()
 {
-	this.removeTable();
-	if(this.tuples.length === 0) return;
-	
-	let tbparent = document.getElementById('result');
-	let allRows = this.tuples;
+    this.removeTable();
+    if(this.tuples.length === 0) return;
+
+    let tbparent = document.getElementById('result');
+    let allRows = this.tuples;
     let table = '<table id = "resultTable">';
     for (let singleRow = -1; singleRow < allRows.length; singleRow++) {
         if (singleRow === -1) {
@@ -122,7 +120,7 @@ Dataframe.prototype.showTable = function()
         } else {
             table += '<tr id = "tuple'+ singleRow + '">';
         }
-        
+
         let row = allRows[singleRow];
         let rowKeys = Object.keys(allRows[0]);
         for(let i = 0; i < rowKeys.length; i++){
@@ -143,26 +141,27 @@ Dataframe.prototype.showTable = function()
     table += '</tbody>';
     table += '</table>';
 
-	tbparent.insertAdjacentHTML("afterbegin", table);
-	let elemRow;
-	
+    tbparent.insertAdjacentHTML("afterbegin", table);
+    let elemRow;
+
     for (let singleRow = 0; singleRow < allRows.length; singleRow++) {
-		elemRow = document.getElementById('tuple'+singleRow);
-		elemRow.addEventListener("click", (e) => {rowClickEventListner(e, singleRow)});
-	}
+        elemRow = document.getElementById('tuple'+singleRow);
+        elemRow.addEventListener("click", (e) => {rowClickEventListner(e, singleRow)});
+    }
 }
 
 Dataframe.prototype.removeTable = function()
 {
-	let tbparent = document.getElementById('result');
-	let tb = document.getElementById('resultTable');
-	if(tb != null)
-		tbparent.removeChild(tb);
+    let tbparent = document.getElementById('result');
+    let tb = document.getElementById('resultTable');
+    if(tb != null)
+        tbparent.removeChild(tb);
 }
 
 var dataframe;
 var selectedRows = [];
 var rowLength = 0;
+var metadata = {};
 
 function getCheckboxValue()  {
     var value_str = document.getElementById('searchRange');
@@ -172,7 +171,10 @@ function getCheckboxValue()  {
     const selectedEls =
         document.querySelectorAll(query);
     const rangeValue = document.getElementById('searchRange').value
-    const inputValue = document.querySelector('input[name="customInputField"]').value
+    const inputField = document.getElementById('actualInput');
+    let inputValue;
+    if(inputField)
+        inputValue = preprocessInput(rangeValue, inputField.value);
 
     // 선택된 목록에서 value 찾기
     let result = [];
@@ -208,7 +210,7 @@ function postAjax(_attribuite, _selectRange, _search)
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
-    
+
     $.ajax({
         type: 'POST',
         url:'/employee/count',
@@ -216,11 +218,14 @@ function postAjax(_attribuite, _selectRange, _search)
         dataType:'json',
         contentType:'application/json; charset=utf-8'
     }).done(function(rs) {
+        let x = document.getElementsByClassName("countTuple")[0];
+        x.innerText=rs;
         console.log(rs);
-        // rowLength = rs;
-        // selectedRows = [];
-		// for(let i = 0; i < rowLength; i++)
-		// 	selectedRows.push(false);
+        // 행 선택 기능을 위한 초기화 파트
+        rowLength = rs;
+        selectedRows = [];
+        for(let i = 0; i < rowLength; i++)
+            selectedRows.push(false);
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
@@ -228,7 +233,7 @@ function postAjax(_attribuite, _selectRange, _search)
 
 function replaceNullorZero(_objs)
 {
-	if(_objs.length === 0) return [];
+    if(_objs.length === 0) return [];
     const keys = Object.keys(_objs[0]);
     _objs.forEach((v) => {
         for(let i = 0; i < keys.length ; i++)
@@ -243,19 +248,65 @@ function replaceNullorZero(_objs)
 
 function rowClickEventListner(event, index)
 {
-	elemRow = document.getElementById('tuple'+index);
+    elemRow = document.getElementById('tuple'+index);
     console.log(document.getElementById('tuple'+index));
-	if(selectedRows[index] = !selectedRows[index])
-		elemRow.style.cssText = 'background-color: #d4f4d4';
-	else
-		elemRow.style.cssText = 'background-color: #ffffff';
+    if(selectedRows[index] = !selectedRows[index])
+        elemRow.style.cssText = 'background-color: #d4f4d4';
+    else
+        elemRow.style.cssText = 'background-color: #ffffff';
 }
 
 function postSelectedRows()
 {
-	let rows = []
-	for(let i = 0; i < rowLength; i++)
-		if(selectedRows[i])
-			rows.push(dataframe.tuples[i])
-	console.log(rows)
+    let rows = []
+    for(let i = 0; i < rowLength; i++)
+        if(selectedRows[i])
+            rows.push(dataframe.tuples[i])
+    console.log(rows)
+}
+
+function makeDropdownFromMetadata(_value)
+{
+    if(_value === undefined) return;
+
+    let inputField = document.getElementById("customInputField");
+    let htmlString = "";
+    let metaField;
+
+    switch(_value)
+    {
+        case "dname" :	metaField = "department"; break;
+        case "ssn" :	metaField = "name"; break;
+        case "sex" :	metaField = "sex"; break;
+        default : 	metaField = undefined; break;
+    }
+
+    if(metaField === undefined)
+    {
+        htmlString += "<input id = \"actualInput\" /input>";
+    }
+    else
+    {
+        htmlString += "<select id = \"actualInput\">";
+        for(let i = 0; i < metadata[metaField].length ; i++)
+        {
+            htmlString += "<option value = \"" + metadata[metaField][i] + "\">" + metadata[metaField][i] + "</option>";
+        }
+    }
+
+    inputField.innerHTML = htmlString;
+}
+
+function preprocessInput(_range, _value)
+{
+    let modified = _value.toString();
+    switch(_range)
+    {
+        case "bdate" :
+            if(_value < 10)
+                modified = "0" + modified;
+            break;
+    }
+
+    return modified;
 }

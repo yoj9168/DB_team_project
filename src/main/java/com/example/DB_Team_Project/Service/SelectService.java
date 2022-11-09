@@ -1,9 +1,6 @@
 package com.example.DB_Team_Project.Service;
 
-import com.example.DB_Team_Project.Employee.Employee;
-import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
-import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
-import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
+import com.example.DB_Team_Project.Employee.*;
 import com.example.DB_Team_Project.Repository.JdbcTemplateEmployeeRepository;
 import com.example.DB_Team_Project.Repository.JdbcTemplateRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +42,9 @@ public class SelectService {
     }
     public int update(EmployeeUpdateDto dto) {
         return opearationRepos.update(dto);
+    }
+
+    public int insert(EmployeeInsertDto dto) {
+        return opearationRepos.insert(dto);
     }
 }
