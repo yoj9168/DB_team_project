@@ -1,6 +1,5 @@
 package com.example.DB_Team_Project.Repository;
 
-import com.example.DB_Team_Project.Employee.Employee;
 import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
 import com.example.DB_Team_Project.Employee.EmployeeInsertDto;
 import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
@@ -9,11 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateRepository implements OperationRepository {
+public class JdbcEmployeeOperationRepository implements OperationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcEmployeeOperationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

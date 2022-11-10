@@ -12,4 +12,9 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/insert")
+    public String insert(){
+        return "insert";
+    }
+
 }

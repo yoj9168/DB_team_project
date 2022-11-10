@@ -1,9 +1,7 @@
 package com.example.DB_Team_Project.Repository;
 
 import com.example.DB_Team_Project.Employee.Employee;
-import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
 import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
-import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.util.List;
 @Repository
-public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
+public class JdbcEmployeeSelectRepository implements SelectRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private boolean check[];
@@ -26,7 +24,7 @@ public class JdbcTemplateEmployeeRepository implements EmployeeRepository{
 
 
     @Autowired
-    public JdbcTemplateEmployeeRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcEmployeeSelectRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

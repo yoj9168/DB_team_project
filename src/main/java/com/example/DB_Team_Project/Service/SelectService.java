@@ -1,8 +1,8 @@
 package com.example.DB_Team_Project.Service;
 
 import com.example.DB_Team_Project.Employee.*;
-import com.example.DB_Team_Project.Repository.JdbcTemplateEmployeeRepository;
-import com.example.DB_Team_Project.Repository.JdbcTemplateRepository;
+import com.example.DB_Team_Project.Repository.JdbcEmployeeSelectRepository;
+import com.example.DB_Team_Project.Repository.JdbcEmployeeOperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,9 @@ import java.util.List;
 @Service
 public class SelectService {
     @Autowired
-    private final JdbcTemplateEmployeeRepository repository;
+    private final JdbcEmployeeSelectRepository repository;
     @Autowired
-    private final JdbcTemplateRepository opearationRepos;
+    private final JdbcEmployeeOperationRepository opearationRepos;
 
     @Transactional
     public List<Employee> select(EmployeeSelectDto dto) {
