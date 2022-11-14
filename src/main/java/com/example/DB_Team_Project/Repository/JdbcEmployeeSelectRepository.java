@@ -168,7 +168,28 @@ public class JdbcEmployeeSelectRepository implements SelectRepository {
 
     @Override
     public List<String> selectDependent(DependentDto dto) {
-        return null;
-        //return jdbcTemplate.query("select dependent_name from employee join dependent on ssn=essn where fname")
+        String fname = "\""+dto.getFname()+"\"";
+        String lname = "\""+dto.getLname()+"\"";
+        String minit = "\""+dto.getMinit()+"\"";
+        return jdbcTemplate.query("select dependent_name from employee join dependent on ssn=essn " +
+                "where fname = "+fname+"AND minit = "+minit+"AND lname = "+lname,(ResultSet rs, int rowNum)->{
+            String string = rs.getString("dependent_name");
+            return string;
+        });
+
     }
+
+    @Override
+    public List<String> selectName(EmployeeSelectDto dto) {
+        selectRange = dto.getSelectRange();
+        String where = checkCommand(selectRange, dto);
+        System.out.println("select a.name "+ from +where);
+
+        return jdbcTemplate.query("select a.fname, a.minit, a.lname "+ from+where, (ResultSet rs, int rowNum)->{
+            String string = "";
+            string+=rs.getString("fname")+rs.getString("minit")+rs.getString("lname");
+            return string;
+        });
+    }
+
 }

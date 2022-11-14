@@ -14,4 +14,6 @@ public interface SelectRepository {
     List<String> getName();
 
     List<String> selectDependent(DependentDto dto);
+
+    List<String> selectName(EmployeeSelectDto dto);
 }

@@ -47,4 +47,16 @@ public class SelectService {
     public int insert(EmployeeInsertDto dto) {
         return opearationRepos.insert(dto);
     }
+
+    public List<String> selectName(EmployeeSelectDto dto) {
+        return repository.selectName(dto);
+    }
+
+    public List<String> selectDependent(DependentDto dto) {
+        return repository.selectDependent(dto);
+    }
+
+    public int updateDepartment(DepartmentDto dto) {
+        return opearationRepos.updateDepartment(dto);
+    }
 }

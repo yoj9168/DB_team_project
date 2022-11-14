@@ -71,9 +71,23 @@
 
 </br>
 </br>
-<p>선택된 튜플의 개수 : <span class="countTuple">0</span></p>
-<button onclick='postSelectedRows()'>선택 완료</button>
+<p>선택한 직원 : <span class="selectName"></span></p>
+<p>검색된 튜플의 개수 : <span class="countTuple">0</span></p>
+<button onclick='postDeleteSelectedRows()'>선택항목 삭제</button>
 
+</br>
+<p id = "updateBlock">
+    <span>수정:</span>
+    <select id="updateRange">
+        <option value="address">주소</option>
+        <option value="sex">성별</option>
+        <option value="salary">연봉</option>
+    </select>
+    <input id = "updateValue"></input>
+    <button onclick='postUpdateSelectedRows()'>UPDATE</button>
+</p>
+
+</br>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 

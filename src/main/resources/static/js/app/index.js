@@ -1,39 +1,4 @@
-$(document).ready(function (){
-    $.ajax({
-        type: 'POST',
-        url:'/employee/department',
-        dataType:'json',
-        contentType:'application/json; charset=utf-8',
-        async : false
-    }).done(function(rs) {
-        metadata["department"] = rs
-        console.log(metadata);
-    }).fail(function (error) {
-        alert(JSON.stringify(error));
-    });
-    $.ajax({
-        type: 'POST',
-        url:'/employee/sex',
-        dataType:'json',
-        contentType:'application/json; charset=utf-8',
-        async : false
-    }).done(function(rs) {
-        metadata["sex"] = rs
-    }).fail(function (error) {
-        alert(JSON.stringify(error));
-    });
-    $.ajax({
-        type: 'POST',
-        url:'/employee/name',
-        dataType:'json',
-        contentType:'application/json; charset=utf-8',
-        async : false
-    }).done(function(rs) {
-        metadata["name"] = rs
-    }).fail(function (error) {
-        alert(JSON.stringify(error));
-    });
-})
+$(document).ready(getMetadata)
 
 function Dataframe(_tuples) {
     this.tuples = _tuples;
@@ -124,9 +89,15 @@ Dataframe.prototype.showTable = function()
         let row = allRows[singleRow];
         let rowKeys = Object.keys(allRows[0]);
         for(let i = 0; i < rowKeys.length; i++){
+
             if(singleRow === -1){
                 table += '<th>' + rowKeys[i] + '</th>';
-            } else {
+            }
+            else if(rowKeys[i] == "ssn" && !isContainsPK){
+                table += '<td>' + '' + '</td>';
+                continue;
+            }
+            else{
                 table += '<td>' + row[rowKeys[i]] + '</td>';
             }
         }
@@ -162,6 +133,7 @@ var dataframe;
 var selectedRows = [];
 var rowLength = 0;
 var metadata = {};
+var isContainsPK = false;
 
 function getCheckboxValue()  {
     var value_str = document.getElementById('searchRange');
@@ -187,12 +159,17 @@ function getCheckboxValue()  {
             result.push("lname");
             result.push("minit");
         }
-    });
 
-    postAjax(result, rangeValue, inputValue);
+        if(el.value == "ssn"){
+            isContainsPK = true;
+        }
+    });
+    result.push("ssn");
+
+    postSelectAjax(result, rangeValue, inputValue);
 }
 
-function postAjax(_attribuite, _selectRange, _search)
+function postSelectAjax(_attribuite, _selectRange, _search)
 {
     // Type은 List<String>, String, String 입니다.
     let testObj = {attribute : _attribuite, selectRange : _selectRange, search : _search}
@@ -230,6 +207,24 @@ function postAjax(_attribuite, _selectRange, _search)
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
+    $.ajax({
+        type: 'POST',
+        url:'/employee/selectName',
+        data: JSON.stringify(testObj),
+        dataType:'json',
+        contentType:'application/json; charset=utf-8'
+    }).done(function(rs) {
+        let y = document.getElementsByClassName("selectName")[0];
+        const nameList = new Array();
+        for(i = 0; i < rs.length; i++){
+            nameList.push(rs[i]);
+        }
+        let list = nameList.join(", ")
+        y.innerText=list;
+
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
 }
 
 function replaceNullorZero(_objs)
@@ -257,13 +252,59 @@ function rowClickEventListner(event, index)
         elemRow.style.cssText = 'background-color: #ffffff';
 }
 
-function postSelectedRows()
+function postDeleteSelectedRows()
 {
-    let rows = []
+    let testObj, cnt = 0;
     for(let i = 0; i < rowLength; i++)
-        if(selectedRows[i])
-            rows.push(dataframe.tuples[i])
-    console.log(rows)
+    {
+        if(!selectedRows[i]) continue;
+        testObj = {condition : "ssn", value : (dataframe.tuples[i])["ssn"]};
+
+        $.ajax({
+            type: 'POST',
+            url:'/employee/delete',
+            data: JSON.stringify(testObj),
+            dataType:'json',
+            contentType:'application/json; charset=utf-8'
+        }).done(function(rs) {
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+        cnt++;
+    }
+
+    console.log(cnt +" TUPLE DELETED");
+    getMetadata();
+    getCheckboxValue();
+}
+
+function postUpdateSelectedRows()
+{
+    let ur = document.getElementById("updateRange").value;
+    let uv = document.getElementById("updateValue").value;
+    let testObj, cnt = 0;
+
+    for(let i = 0; i < rowLength; i++)
+    {
+        if(!selectedRows[i]) continue;
+        testObj = {setCondition : ur, setValue : uv, whereCondition : "ssn", whereValue : (dataframe.tuples[i])["ssn"]}
+
+        $.ajax({
+            type: 'POST',
+            url:'/employee/update',
+            data: JSON.stringify(testObj),
+            dataType:'json',
+            contentType:'application/json; charset=utf-8'
+        }).done(function(rs) {
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+        cnt++;
+    }
+
+    console.log(cnt +" TUPLE UPDATED");
+    getMetadata();
+    getCheckboxValue();
 }
 
 function makeDropdownFromMetadata(_value)
@@ -279,6 +320,7 @@ function makeDropdownFromMetadata(_value)
         case "dname" :	metaField = "department"; break;
         case "ssn" :	metaField = "name"; break;
         case "sex" :	metaField = "sex"; break;
+        case "default" : metaField = "default"; break;
         default : 	metaField = undefined; break;
     }
 
@@ -286,7 +328,7 @@ function makeDropdownFromMetadata(_value)
     {
         htmlString += "<input id = \"actualInput\" /input>";
     }
-    else
+    else if (metaField != "default")
     {
         htmlString += "<select id = \"actualInput\">";
         for(let i = 0; i < metadata[metaField].length ; i++)
@@ -310,4 +352,41 @@ function preprocessInput(_range, _value)
     }
 
     return modified;
+}
+
+function getMetadata(){
+    $.ajax({
+        type: 'POST',
+        url:'/employee/department',
+        dataType:'json',
+        contentType:'application/json; charset=utf-8',
+        async : false
+    }).done(function(rs) {
+        metadata["department"] = rs
+        console.log(metadata);
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
+    $.ajax({
+        type: 'POST',
+        url:'/employee/sex',
+        dataType:'json',
+        contentType:'application/json; charset=utf-8',
+        async : false
+    }).done(function(rs) {
+        metadata["sex"] = rs
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
+    $.ajax({
+        type: 'POST',
+        url:'/employee/name',
+        dataType:'json',
+        contentType:'application/json; charset=utf-8',
+        async : false
+    }).done(function(rs) {
+        metadata["name"] = rs
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
 }

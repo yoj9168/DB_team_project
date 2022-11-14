@@ -1,14 +1,11 @@
 package com.example.DB_Team_Project.Repository;
 
-import com.example.DB_Team_Project.Employee.DependentDto;
-import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
-import com.example.DB_Team_Project.Employee.EmployeeInsertDto;
-import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
+import com.example.DB_Team_Project.Employee.*;
 
 public interface OperationRepository {
 
     int delete(EmployeeDeleteDto dto);
     int update(EmployeeUpdateDto dto);
     int insert(EmployeeInsertDto dto);
-    int updateDepartment(EmployeeUpdateDto dto);
+    int updateDepartment(DepartmentDto dto);
 }

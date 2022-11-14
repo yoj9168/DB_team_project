@@ -36,6 +36,10 @@ public class EmployeeController {
     public int selectCount(@RequestBody EmployeeSelectDto dto){
         return selectService.selectCount(dto);
     }
+    @PostMapping("/employee/selectName")
+    public List<String> selectName(@RequestBody EmployeeSelectDto dto){
+        return selectService.selectName(dto);
+    }
 
     @PostMapping("/employee/delete")
     public int delete(@RequestBody EmployeeDeleteDto dto){
@@ -49,4 +53,13 @@ public class EmployeeController {
 
     @PostMapping("/employee/insert")
     public int insert(@RequestBody EmployeeInsertDto dto){return selectService.insert(dto);}
+
+    @PostMapping("/employee/selectDependent")
+    public List<String> selectDependent(@RequestBody DependentDto dto){
+        return selectService.selectDependent(dto);
+    }
+    @PostMapping("/employee/updateDepartment")
+    public int updateDepartment(@RequestBody DepartmentDto dto){
+        return selectService.updateDepartment(dto);
+    }
 }

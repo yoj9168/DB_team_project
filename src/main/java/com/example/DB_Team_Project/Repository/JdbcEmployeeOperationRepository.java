@@ -1,5 +1,6 @@
 package com.example.DB_Team_Project.Repository;
 
+import com.example.DB_Team_Project.Employee.DepartmentDto;
 import com.example.DB_Team_Project.Employee.EmployeeDeleteDto;
 import com.example.DB_Team_Project.Employee.EmployeeInsertDto;
 import com.example.DB_Team_Project.Employee.EmployeeUpdateDto;
@@ -56,14 +57,10 @@ public class JdbcEmployeeOperationRepository implements OperationRepository {
     }
 
     @Override
-    public int updateDepartment(EmployeeUpdateDto dto) {
-        String sql = "update employee set ";
-        String setCondition = dto.getSetCondition();
-        String setValue = dto.getSetValue();
-        String whereCondition = dto.getWhereCondition();
-        String whereValue = dto.getWhereValue();
-
-        sql+=setCondition+"="+setValue+" where "+whereCondition + " = "+whereValue;
+    public int updateDepartment(DepartmentDto dto) {
+        String sql = "update employee A inner join department B ON A.dno=B.dnumber set A.salary = ";
+        sql += dto.getSetValue() + ",modified=CURRENT_TIMESTAMP() where B.dname = "+"\""+dto.getDepartment()+"\"";
+        System.out.println(sql);
         return jdbcTemplate.update(sql);
     }
 
