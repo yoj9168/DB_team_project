@@ -44,7 +44,7 @@ public class JdbcEmployeeOperationRepository implements OperationRepository {
         if(!whereCondition.equals("salary")){
             whereValue = "\""+whereValue+"\"";
         }
-        sql+=setCondition+"="+setValue+" where "+whereCondition + " = "+whereValue;
+        sql+=setCondition+"="+setValue+",modified=CURRENT_TIMESTAMP() where "+whereCondition + " = "+whereValue;
         return jdbcTemplate.update(sql);
 
     }
@@ -54,4 +54,17 @@ public class JdbcEmployeeOperationRepository implements OperationRepository {
         System.out.println("insert into employee value "+dto.toString());
         return jdbcTemplate.update("insert into employee value "+dto);
     }
+
+    @Override
+    public int updateDepartment(EmployeeUpdateDto dto) {
+        String sql = "update employee set ";
+        String setCondition = dto.getSetCondition();
+        String setValue = dto.getSetValue();
+        String whereCondition = dto.getWhereCondition();
+        String whereValue = dto.getWhereValue();
+
+        sql+=setCondition+"="+setValue+" where "+whereCondition + " = "+whereValue;
+        return jdbcTemplate.update(sql);
+    }
+
 }

@@ -196,8 +196,8 @@ function postAjax(_attribuite, _selectRange, _search)
 {
     // Type은 List<String>, String, String 입니다.
     let testObj = {attribute : _attribuite, selectRange : _selectRange, search : _search}
-
     console.log(testObj);
+
     $.ajax({
         type: 'POST',
         url:'/employee',
@@ -205,6 +205,7 @@ function postAjax(_attribuite, _selectRange, _search)
         dataType:'json',
         contentType:'application/json; charset=utf-8'
     }).done(function(rs) {
+        console.log(rs);
         dataframe = new Dataframe((replaceNullorZero(rs)));
         dataframe.showTable();
     }).fail(function (error) {
@@ -238,8 +239,8 @@ function replaceNullorZero(_objs)
     _objs.forEach((v) => {
         for(let i = 0; i < keys.length ; i++)
         {
-            if(v[keys[i]] == null || v[keys[i]] == 0)
-                v[keys[i]] = ""
+            if(v[keys[i]] == null || v[keys[i]] === 0 || v[keys[i]] === "nullnullnull")
+                v[keys[i]] = "";
         }
     })
 

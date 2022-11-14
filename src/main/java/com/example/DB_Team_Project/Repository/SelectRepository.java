@@ -1,5 +1,6 @@
 package com.example.DB_Team_Project.Repository;
 
+import com.example.DB_Team_Project.Employee.DependentDto;
 import com.example.DB_Team_Project.Employee.Employee;
 import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
 
@@ -11,4 +12,6 @@ public interface SelectRepository {
     List<String> getDepartment();
     List<String> getSex();
     List<String> getName();
+
+    List<String> selectDependent(DependentDto dto);
 }

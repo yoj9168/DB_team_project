@@ -1,5 +1,6 @@
 package com.example.DB_Team_Project.Repository;
 
+import com.example.DB_Team_Project.Employee.DependentDto;
 import com.example.DB_Team_Project.Employee.Employee;
 import com.example.DB_Team_Project.Employee.EmployeeSelectDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,5 +164,11 @@ public class JdbcEmployeeSelectRepository implements SelectRepository {
             string+=rs.getString("fname");
             return string;
         });
+    }
+
+    @Override
+    public List<String> selectDependent(DependentDto dto) {
+        return null;
+        //return jdbcTemplate.query("select dependent_name from employee join dependent on ssn=essn where fname")
     }
 }
