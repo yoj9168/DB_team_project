@@ -37,15 +37,11 @@ public class JdbcEmployeeOperationRepository implements OperationRepository {
         String sql = "update employee set ";
         String setCondition = dto.getSetCondition();
         String setValue = dto.getSetValue();
-        String whereCondition = dto.getWhereCondition();
-        String whereValue = dto.getWhereValue();
+        String ssn = "\""+dto.getSsn()+"\"";
         if(!setCondition.equals("salary")){
             setValue = "\""+setValue+"\"";
         }
-        if(!whereCondition.equals("salary")){
-            whereValue = "\""+whereValue+"\"";
-        }
-        sql+=setCondition+"="+setValue+",modified=CURRENT_TIMESTAMP() where "+whereCondition + " = "+whereValue;
+        sql+=setCondition+"="+setValue+",modified=CURRENT_TIMESTAMP() where ssn = "+ssn;
         return jdbcTemplate.update(sql);
 
     }

@@ -7,7 +7,6 @@ import lombok.Getter;
 public class EmployeeUpdateDto {
     private String setCondition;
     private String setValue;
-    private String whereCondition;
-    private String whereValue;
+    private String ssn;
 
 }

@@ -4,7 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class DependentDto {
-    String fname;
-    String minit;
-    String lname;
+    String ssn;
 }

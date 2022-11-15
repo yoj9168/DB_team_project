@@ -168,11 +168,9 @@ public class JdbcEmployeeSelectRepository implements SelectRepository {
 
     @Override
     public List<String> selectDependent(DependentDto dto) {
-        String fname = "\""+dto.getFname()+"\"";
-        String lname = "\""+dto.getLname()+"\"";
-        String minit = "\""+dto.getMinit()+"\"";
+        String ssn = dto.getSsn();
         return jdbcTemplate.query("select dependent_name from employee join dependent on ssn=essn " +
-                "where fname = "+fname+"AND minit = "+minit+"AND lname = "+lname,(ResultSet rs, int rowNum)->{
+                "where ssn = "+ssn,(ResultSet rs, int rowNum)->{
             String string = rs.getString("dependent_name");
             return string;
         });
