@@ -71,7 +71,7 @@
 
 </br>
 </br>
-<p>선택한 직원 : <span class="selectName"></span></p>
+<p>검색된 직원 : <span class="selectName"></span></p>
 <p>검색된 튜플의 개수 : <span class="countTuple">0</span></p>
 <button onclick='postDeleteSelectedRows()'>선택항목 삭제</button>
 
@@ -86,8 +86,26 @@
     <input id = "updateValue"></input>
     <button onclick='postUpdateSelectedRows()'>UPDATE</button>
 </p>
-<button onclick="location.href='insert'">삽입</button>
+
 </br>
+<p id = "updateDepartmentBlock">
+    <span>부서 봉급 일괄 수정:</span>
+	<span id = 'departmentInputField'>
+	</span>
+    <input id = "updateDepartmentValue"></input>
+    <button onclick='postUpdateDepartmentSalary()'>일괄 변경</button>
+</p>
+
+</br>
+<button onclick="location.href='insert'">삽입</button>
+
+</br>
+<p id = "selectDependentBlock">
+    <button onclick='postSelectDepedent()'>선택 직원 부양가족 목록</button>
+    <p id = "dpResult">
+</p>
+
+
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 

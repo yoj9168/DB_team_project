@@ -265,7 +265,8 @@ function postDeleteSelectedRows()
             url:'/employee/delete',
             data: JSON.stringify(testObj),
             dataType:'json',
-            contentType:'application/json; charset=utf-8'
+            contentType:'application/json; charset=utf-8',
+            async : false
         }).done(function(rs) {
         }).fail(function (error) {
             alert(JSON.stringify(error));
@@ -287,14 +288,16 @@ function postUpdateSelectedRows()
     for(let i = 0; i < rowLength; i++)
     {
         if(!selectedRows[i]) continue;
-        testObj = {setCondition : ur, setValue : uv, whereCondition : "ssn", whereValue : (dataframe.tuples[i])["ssn"]}
+        testObj = {setCondition : ur, setValue : uv, ssn : (dataframe.tuples[i])["ssn"]}
+        console.log(testObj);
 
         $.ajax({
             type: 'POST',
             url:'/employee/update',
             data: JSON.stringify(testObj),
             dataType:'json',
-            contentType:'application/json; charset=utf-8'
+            contentType:'application/json; charset=utf-8',
+            async : false
         }).done(function(rs) {
         }).fail(function (error) {
             alert(JSON.stringify(error));
@@ -303,6 +306,107 @@ function postUpdateSelectedRows()
     }
 
     console.log(cnt +" TUPLE UPDATED");
+    getMetadata();
+    getCheckboxValue();
+}
+
+function postSelectDepedent()
+{
+    let testObj;
+    let getObj = [];
+
+    for(let i = 0; i < rowLength; i++)
+    {
+        if(!selectedRows[i]) continue;
+        testObj = {ssn : (dataframe.tuples[i])["ssn"]}
+
+        $.ajax({
+            type: 'POST',
+            url:'/employee/selectDependent',
+            data: JSON.stringify(testObj),
+            dataType:'json',
+            contentType:'application/json; charset=utf-8',
+            async : false
+        }).done(function(rs) {
+            getObj.push({Emp_name : (dataframe.tuples[i])["name"], Dependents : rs})
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
+
+    updateDependentTable(getObj);
+    getMetadata();
+    getCheckboxValue();
+}
+
+function updateDependentTable(_objs)
+{
+    removeDependentTable();
+    let tbparent = document.getElementById("dpResult");
+    let allRows = _objs;
+    let table = '<table id = "dpResultTable">';
+    for (let singleRow = -1; singleRow < allRows.length; singleRow++) {
+        if (singleRow === -1) {
+            table += '<thead>';
+            table += '<tr>';
+        } else {
+            table += '<tr id = "tuple'+ singleRow + '">';
+        }
+
+        let row = allRows[singleRow];
+        let rowKeys = Object.keys(allRows[0]);
+        for(let i = 0; i < rowKeys.length; i++){
+
+            if(singleRow === -1){
+                table += '<th>' + rowKeys[i] + '</th>';
+            }
+            else{
+                table += '<td>' + row[rowKeys[i]] + '</td>';
+            }
+        }
+        if (singleRow === -1) {
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody>';
+        } else {
+            table += '</tr>';
+        }
+    }
+    table += '</tbody>';
+    table += '</table>';
+
+    tbparent.insertAdjacentHTML("afterbegin", table);
+}
+
+function removeDependentTable()
+{
+    let tbparent = document.getElementById('dpResult');
+    let tb = document.getElementById('dpResultTable');
+    if(tb != null)
+        tbparent.removeChild(tb);
+}
+
+function postUpdateDepartmentSalary()
+{
+    let testObj;
+    let udv = document.getElementById("updateDepartmentValue").value;
+    let udn = document.getElementById("actualDeptInput").value;
+
+    testObj = {setValue : udv, department : udn}
+
+    $.ajax({
+        type: 'POST',
+        url:'/employee/updateDepartment',
+        data: JSON.stringify(testObj),
+        dataType:'json',
+        contentType:'application/json; charset=utf-8',
+        async : false
+    }).done(function(rs) {
+        console.log(rs);
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
+
     getMetadata();
     getCheckboxValue();
 }
@@ -335,9 +439,25 @@ function makeDropdownFromMetadata(_value)
         {
             htmlString += "<option value = \"" + metadata[metaField][i] + "\">" + metadata[metaField][i] + "</option>";
         }
+        htmlString += "</select>"
     }
 
     inputField.innerHTML = htmlString;
+}
+
+function makeDeptDropdown()
+{
+    let deptField = document.getElementById("departmentInputField");
+    let htmlString = "";
+
+    htmlString += "<select id = \"actualDeptInput\">";
+    for(let i = 0; i < metadata["department"].length ; i++)
+    {
+        htmlString += "<option value = \"" + metadata["department"][i] + "\">" + metadata["department"][i] + "</option>";
+    }
+    htmlString += "</select>"
+
+    deptField.innerHTML = htmlString;
 }
 
 function preprocessInput(_range, _value)
@@ -389,4 +509,6 @@ function getMetadata(){
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
+
+    makeDeptDropdown();
 }
