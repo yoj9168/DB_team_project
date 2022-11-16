@@ -11,6 +11,7 @@
             border-collapse: collapse;
             border: 1px solid #d4d4d4;
             height: 500px;
+
         }
 
         th, td
@@ -21,34 +22,65 @@
         th
         {
             border-bottom: 1px solid #d4d4d4;
+            text-transform: uppercase;
+        }
+        label
+        {
+            padding-left: 30px;
+        }
+        .selectName
+        {
+            font-weight: bold;
+            padding-left: 10px;
+        }
+        .countTuple
+        {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-<input type='checkbox'
-       name='search'
-       value='name'/> Name
-<input type='checkbox'
-       name='search'
-       value='ssn' /> Ssn
-<input type='checkbox'
-       name='search'
-       value='bdate' /> Bdate
-<input type='checkbox'
-       name='search'
-       value='address' /> Address
-<input type='checkbox'
-       name='search'
-       value='sex' /> Sex
-<input type='checkbox'
-       name='search'
-       value='salary' /> Salary
-<input type='checkbox'
-       name='search'
-       value='super_ssn' /> Supervisor
-<input type='checkbox'
-       name='search'
-       value='dno' /> Department
+<label>
+    <input type='checkbox'
+           name='search'
+           value='name'/> Name
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='ssn' /> Ssn
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='bdate' /> Bdate
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='address' /> Address
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='sex' /> Sex
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='salary' /> Salary
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='super_ssn' /> Supervisor
+</label>
+<label>
+    <input type='checkbox'
+           name='search'
+           value='dno' /> Department
+</label>
+</br>
 </br>
 <select id="searchRange" onchange = "makeDropdownFromMetadata(this.value)">
     <option value="default">전체</option>
@@ -73,8 +105,9 @@
 </br>
 <p>검색된 직원 : <span class="selectName"></span></p>
 <p>검색된 튜플의 개수 : <span class="countTuple">0</span></p>
+</br>
 <button onclick='postDeleteSelectedRows()'>선택항목 삭제</button>
-
+</br>
 </br>
 <p id = "updateBlock">
     <span>수정:</span>
@@ -90,7 +123,7 @@
 </br>
 <p id = "updateDepartmentBlock">
     <span>부서 봉급 일괄 수정:</span>
-	<span id = 'departmentInputField'>
+    <span id = 'departmentInputField'>
 	</span>
     <input id = "updateDepartmentValue"></input>
     <button onclick='postUpdateDepartmentSalary()'>일괄 변경</button>
@@ -102,7 +135,7 @@
 </br>
 <p id = "selectDependentBlock">
     <button onclick='postSelectDepedent()'>선택 직원 부양가족 목록</button>
-    <p id = "dpResult">
+<p id = "dpResult">
 </p>
 
 

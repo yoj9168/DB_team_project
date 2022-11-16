@@ -109,7 +109,7 @@ public class JdbcEmployeeSelectRepository implements SelectRepository {
                 ssn = rs.getString("Ssn");
             }
             if(check[1] && check[2] && check[3]){
-                name = rs.getString("Fname")+rs.getString("Minit")+rs.getString("Lname");
+                name = rs.getString("Fname")+". "+rs.getString("Minit")+". "+rs.getString("Lname");
             }
             if(check[4]){
                 bdate = rs.getString("Bdate");
@@ -124,7 +124,8 @@ public class JdbcEmployeeSelectRepository implements SelectRepository {
                 salary = rs.getDouble("Salary");
             }
             if(check[8]){
-                super_ssn = rs.getString("c.Fname")+rs.getString("c.Minit")+rs.getString("c.Lname");
+                if(rs.getString("c.Fname") != null ||  rs.getString("c.Minit") != null || rs.getString("c.Lname") != null)
+                    super_ssn = rs.getString("c.Fname")+". "+rs.getString("c.Minit")+". "+rs.getString("c.Lname");
             }
             if(check[9]){
                 dname = rs.getString("Dname");
@@ -185,7 +186,7 @@ public class JdbcEmployeeSelectRepository implements SelectRepository {
 
         return jdbcTemplate.query("select a.fname, a.minit, a.lname "+ from+where, (ResultSet rs, int rowNum)->{
             String string = "";
-            string+=rs.getString("fname")+rs.getString("minit")+rs.getString("lname");
+            string+=rs.getString("fname")+". "+rs.getString("minit")+". "+rs.getString("lname");
             return string;
         });
     }
